@@ -1,7 +1,8 @@
-const net = require('net')
+import "dotenv/config.js"
+import net from "net"
 
 net.createServer(function (socket) {
-    const client = new net.Socket().connect(11006, '186.2.171.35')
+    const client = new net.Socket().connect(process.env.GAME_REMOTE_PORT, process.env.GAME_REMOTE_IP)
 
     /* Входящие */
     client.on('data', function (data) {
@@ -12,4 +13,4 @@ net.createServer(function (socket) {
     socket.on('data', function (data) {
         client.write(data)
     })
-}).listen(11006)
+}).listen(process.env.GAME_LOCAL_PORT)

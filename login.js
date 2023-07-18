@@ -1,8 +1,9 @@
-const net = require('net')
-const fs = require('fs')
+import "dotenv/config.js"
+import net from "net"
+import {parsePacket} from "./helpers.js"
 
 net.createServer(function (socket) {
-    const client = new net.Socket().connect(11004, '186.2.171.35')
+    const client = new net.Socket().connect(process.env.LOGIN_REMOTE_PORT, process.env.LOGIN_REMOTE_IP)
 
     /* Входящие */
     client.on('data', function (data) {
@@ -18,7 +19,7 @@ net.createServer(function (socket) {
             data.writeUInt8(1, 242)
 
             /* Порт */
-            data.writeUint16BE(11006, 243)
+            data.writeUint16BE(process.env.GAME_LOCAL_PORT, 243)
 
             socket.write(data)
         } else {
@@ -28,34 +29,8 @@ net.createServer(function (socket) {
 
     /* Исходящие */
     socket.on('data', function (data) {
-        client.write(data)
-
         console.log(parsePacket(data))
+
+        client.write(data)
     })
-}).listen(22888)
-
-function parsePacket(data) {
-    if (!!data.readUint8(2)) {
-        const encryptedPacket = data
-        const xor = fs.readFileSync('xor.key')
-
-        const result = encryptedPacket.map((first, second) => first ^ xor[second])
-
-        return {
-            length: result.readUInt16LE(0),
-            is_encrypted: !!result.readUint8(2),
-            number: result.readUint8(3),
-            packet_id: result.readUInt16LE(4),
-            data: result.slice(6).toString('hex')
-        }
-    }
-
-    return {
-        length: data.readUInt16LE(0),
-        is_encrypted: !!data.readUint8(2),
-        number: data.readUint8(3),
-        packet_id: data.readUInt16LE(4),
-        data: data.slice(6).toString('hex')
-    }
-
-}
+}).listen(process.env.LOGIN_LOCAL_PORT)
