@@ -2,10 +2,8 @@ import fs from "fs"
 
 export function parsePacket(data) {
     if (!!data.readUint8(2)) {
-        const encryptedPacket = data
         const xorKey = fs.readFileSync('xor.key')
-
-        const result = encryptedPacket.map((first, second) => first ^ xorKey[second])
+        const result = data.map((first, second) => first ^ xorKey[second])
 
         return {
             length: result.readUInt16LE(0),
