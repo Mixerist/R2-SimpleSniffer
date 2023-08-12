@@ -1,0 +1,21 @@
+{
+  "6000": "eCManagerTrStx",
+  "6100": "eCTrLoginMgrReq",
+  "6101": "eCTrLoginMgrAck",
+  "6102": "eCTrLoginMgrNak",
+  "6103": "eCTrSystemSummaryReq",
+  "6104": "eCTrSystemSummaryAck",
+  "6105": "eCTrConnectStateAck",
+  "6106": "eCTrGatherSystemStatusReq",
+  "6107": "eCTrSystemStopReq",
+  "6108": "eCTrSystemAnnounceReq",
+  "6109": "eCTrSystemStartReq",
+  "6110": "eCTrSystemStartNak",
+  "6111": "eCTrSystemCheckReq",
+  "6112": "eCTrWorldResetReq",
+  "6113": "eCTrWorldResetAck",
+  "6114": "eCTrWorldResetNak",
+  "6115": "eCTrCheckSameIPReq",
+  "6116": "eCTrSystemManyStopReq",
+  "6117": "eCManagerTrEtx"
+}
