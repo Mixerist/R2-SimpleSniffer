@@ -11,14 +11,7 @@ net.createServer(function (socket) {
 
         /* Подменяем реальный IP на IP прокси (пакет со списком серверов 3101) */
         if (packet.id === 3101) {
-            /* IP */
-            data.writeUInt8(127, 239);
-            data.writeUInt8(0, 240);
-            data.writeUInt8(0, 241);
-            data.writeUInt8(1, 242);
-
-            /* Порт */
-            data.writeUint16BE(process.env.GAME_LOCAL_PORT, 243);
+            replaceIpAndPortToLocal(data);
         }
 
         socket.write(data);
@@ -29,3 +22,19 @@ net.createServer(function (socket) {
         client.write(data);
     });
 }).listen(process.env.LOGIN_LOCAL_PORT);
+
+function replaceIpAndPortToLocal(buffer) {
+    const countServers = Math.round(buffer.byteLength / 119);
+
+    let offset = 120;
+
+    for (let i = 0; i < countServers; i++) {
+        process.env.LOCAL_IP.split('.').forEach(value => {
+            buffer.writeUInt8(value, offset++);
+        });
+
+        buffer.writeUint16BE(process.env.GAME_LOCAL_PORT, offset);
+
+        offset += 115;
+    }
+}
